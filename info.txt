@@ -1,0 +1,3 @@
+Name - sam
+reg - 233848
+address
