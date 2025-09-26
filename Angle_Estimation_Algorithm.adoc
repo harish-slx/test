@@ -1,0 +1,94 @@
+= Angle Estimation Algorithm in the Locator
+
+This document outlines the https://arxiv.org/html/2508.11675v2#S3[angle estimation algorithm] used in the Locator component of the system. The algorithm aims to accurately estimate the angle of arrival (AoA) of signals received from multiple sources, allowing for precise localization and tracking.
+
+== Classical Beamforming Techniques
+
+Classical beamforming methods utilize antenna arrays to direct signals toward specific directions. These methods rely on phase differences between signals received by various antennas to estimate the angle of arrival.
+
+=== Delay-and-Sum Beamforming
+
+The Delay-and-Sum (DAS) beamformer, also known as conventional beamforming, is one of the simplest methods for direction-of-arrival (AOA) estimation. DAS applies phase shifts to signals from different directions and averages the signals received by the sensors.
+
+*Advantages:*
+
+- Simple, intuitive, and computationally efficient.
+- Stable under various conditions.
+
+*Limitations:*
+
+- Poor resolution.
+- Susceptible to interference.
+- Struggles to resolve closely spaced sources.
+
+=== Capon Beamforming (MVDR)
+
+The Capon beamforming method, also known as Minimum Variance Distortionless Response (MVDR), minimizes the output power while maintaining a unit gain in the look direction. It adapts to interference by nulling the signals from unwanted sources.
+
+*Advantages:*
+
+- Provides better resolution.
+- Optimal for minimizing variance.
+- Adapts well to interference.
+
+*Limitations:*
+
+- Computationally intensive.
+- Requires matrix inversion.
+- Sensitive to model mismatches.
+
+=== Linear Prediction Method
+
+This method models the array output as a linear combination of past values and the prediction error.
+
+*Advantages:*
+
+- Robust against noise and correlated sources.
+- Avoids spectral search through polynomial rooting.
+
+*Limitations:*
+
+- Sensitive to model order.
+- May produce spurious roots.
+
+== Subspace-Based Methods
+
+Subspace-based methods are a significant improvement in AOA estimation, allowing for higher resolution by utilizing the eigenstructure of the array covariance matrix. These methods split the observation space into signal and noise subspaces and use their orthogonality to estimate the AOAs.
+
+=== MUSIC (Multiple Signal Classification) Algorithm
+
+The MUSIC algorithm uses the orthogonality between source steering vectors and the noise subspace to generate a spatial spectrum. Peaks in this spectrum correspond to the directions of arrival.
+
+MUSIC requires knowledge of the number of sources, which can be estimated using eigenvalue tests or information-theoretic criteria.
+
+*Eigendecomposition Principle:*
+
+The array covariance matrix is decomposed into signal and noise subspaces. The source directions lie in the signal subspace and are orthogonal to the noise subspace.
+
+*Advantages:*
+
+- High resolution.
+- Works well with uncorrelated sources.
+
+*Limitations:*
+
+- Sensitive to model inaccuracies.
+- Requires a computationally expensive spectral search.
+
+=== ESPRIT (Estimation of Signal Parameters via Rotational Invariance Techniques)
+
+ESPRIT utilizes the rotational invariance property of subarrays to estimate the angles of arrival without the need for spectral searching. It assumes that signals received at two subarrays are related by a shift, which allows for direct angle estimation via matrix decomposition.
+
+*Advantages:*
+
+- No need for spectral search, making it computationally more efficient.
+- Performs well with closely spaced sources.
+- Less sensitive to noise than classical methods.
+- Effective when the array geometry meets the shift invariance condition.
+
+*Limitations:*
+
+- Requires specific array geometry (shift-invariant subarrays, such as ULA or a transformed UCA).
+- Sensitive to array calibration errors.
+- Requires accurate estimation of the number of sources for optimal performance.
+- Performance degrades near endfire angles (0° or 180°).
