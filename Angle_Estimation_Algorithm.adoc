@@ -12,12 +12,14 @@ The Delay-and-Sum (DAS) beamformer, also known as conventional beamforming, is o
 
 *Advantages:*
 
-- Simple, intuitive, and computationally efficient.
-- Stable under various conditions.
+- Simple and computationally efficient.
+- Robust to model mismatch and calibration errors.
+- Stable performance under various conditions.
 
 *Limitations:*
 
-- Poor resolution.
+- Limited resolution.
+- Poor performance in presence of strong interferers
 - Susceptible to interference.
 - Struggles to resolve closely spaced sources.
 
@@ -27,7 +29,7 @@ The Capon beamforming method, also known as Minimum Variance Distortionless Resp
 
 *Advantages:*
 
-- Provides better resolution.
+- Provides better resolution than conventional beamforming.
 - Optimal for minimizing variance.
 - Adapts well to interference.
 
@@ -36,20 +38,6 @@ The Capon beamforming method, also known as Minimum Variance Distortionless Resp
 - Computationally intensive.
 - Requires matrix inversion.
 - Sensitive to model mismatches.
-
-=== Linear Prediction Method
-
-This method models the array output as a linear combination of past values and the prediction error.
-
-*Advantages:*
-
-- Robust against noise and correlated sources.
-- Avoids spectral search through polynomial rooting.
-
-*Limitations:*
-
-- Sensitive to model order.
-- May produce spurious roots.
 
 == Subspace-Based Methods
 
@@ -67,7 +55,7 @@ The array covariance matrix is decomposed into signal and noise subspaces. The s
 
 *Advantages:*
 
-- High resolution.
+- https://www.silabs.com/whitepapers/bluetooth-angle-estimation-for-real-time-locationing#:~:text=In%20an%20ideal%20case,%20MUSIC[Excellent resolution].
 - Works well with uncorrelated sources.
 
 *Limitations:*
