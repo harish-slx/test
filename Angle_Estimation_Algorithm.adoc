@@ -1,6 +1,6 @@
 = Angle Estimation Algorithm in the Locator
 
-This document outlines the https://arxiv.org/html/2508.11675v2#S3[angle estimation algorithm] used in the Locator component of the system. The algorithm aims to accurately estimate the angle of arrival (AoA) of signals received from multiple sources, allowing for precise localization and tracking.
+This document outlines the https://arxiv.org/html/2508.11675v2#S3[angle estimation algorithm] used in the Locator component of the system. The algorithm aims to accurately estimate the angle of arrival (AoA) of signals received from multiple sources, allowing for precise localization and tracking. Below is the different types of algorithms used for angle estimation, along with their advantages and limitations.
 
 == Classical Beamforming Techniques
 
@@ -8,7 +8,9 @@ Classical beamforming methods utilize antenna arrays to direct signals toward sp
 
 === Delay-and-Sum Beamforming
 
-The Delay-and-Sum (DAS) beamformer, also known as conventional beamforming, is one of the simplest methods for direction-of-arrival (AOA) estimation. DAS applies phase shifts to signals from different directions and averages the signals received by the sensors.
+The Delay-and-Sum (DAS) beamformer, also known as conventional beamforming, is one of the simplest methods for direction-of-arrival estimation. DAS applies phase shifts to signals from different directions and averages the signals received by the sensors.
+
+By computing the output power, the DAS beamformer generates a spatial spectrum, where peaks indicate the directions of arrival.
 
 *Advantages:*
 
@@ -25,7 +27,7 @@ The Delay-and-Sum (DAS) beamformer, also known as conventional beamforming, is o
 
 === Capon Beamforming (MVDR)
 
-The Capon beamforming method, also known as Minimum Variance Distortionless Response (MVDR), minimizes the output power while maintaining a unit gain in the look direction. It adapts to interference by nulling the signals from unwanted sources.
+The Capon beamforming method, also known as Minimum Variance Distortionless Response (MVDR), minimizes the output power while maintaining a unity gain in the look direction. It adapts to interference by nulling the signals from unwanted sources.
 
 *Advantages:*
 
@@ -39,6 +41,25 @@ The Capon beamforming method, also known as Minimum Variance Distortionless Resp
 - Requires matrix inversion.
 - Sensitive to model mismatches.
 
+=== Linear Prediction (LP) Method
+
+The Linear Prediction method approaches angle estimation from an autoregressive modeling perspective,representing the array output as a linear combination of past values plus a prediction error. 
+
+So the each sample depends on previous sample plus some error to process this method.
+
+*Advantages*:
+
+• Good performance with correlated sources
+• Polynomial rooting avoids spectral search
+• Robust to noise in many scenarios
+• Computationally efficient
+
+*Limitations*:
+
+• Requires selection of prediction order
+• Performance sensitive to model order
+• Limited to specific array geometries
+
 == Subspace-Based Methods
 
 Subspace-based methods are a significant improvement in AOA estimation, allowing for higher resolution by utilizing the eigenstructure of the array covariance matrix. These methods split the observation space into signal and noise subspaces and use their orthogonality to estimate the AOAs.
@@ -47,11 +68,11 @@ Subspace-based methods are a significant improvement in AOA estimation, allowing
 
 The MUSIC algorithm uses the orthogonality between source steering vectors and the noise subspace to generate a spatial spectrum. Peaks in this spectrum correspond to the directions of arrival.
 
-MUSIC requires knowledge of the number of sources, which can be estimated using eigenvalue tests or information-theoretic criteria.
+Test each possible direction by projecting its steering vector onto the noise subspace. If the projection is nearly zero (orthogonal), that direction corresponds to a real source. Peaks in this test gives the angle.
 
 *Eigendecomposition Principle:*
 
-The array covariance matrix is decomposed into signal and noise subspaces. The source directions lie in the signal subspace and are orthogonal to the noise subspace.
+The array covariance matrix is decomposed into signal and noise subspaces by eigendecomposition method. This method used to split the observation space into two orthogonal subspaces: the signal subspace & the noise subspace.
 
 *Advantages:*
 
@@ -65,7 +86,9 @@ The array covariance matrix is decomposed into signal and noise subspaces. The s
 
 === ESPRIT (Estimation of Signal Parameters via Rotational Invariance Techniques)
 
-ESPRIT utilizes the rotational invariance property of subarrays to estimate the angles of arrival without the need for spectral searching. It assumes that signals received at two subarrays are related by a shift, which allows for direct angle estimation via matrix decomposition.
+ESPRIT utilizes the rotational invariance property of subarrays to estimate the angles of arrival without the need for spectral searching. This “shift-invariance” means the signals arriving at one subarray are a rotated (phase-shifted) version of the signals at the other.
+
+ESPRIT extracts the eigenvalues → converts them into phase shifts → then into angles. No need to scan across all possible values.
 
 *Advantages:*
 
@@ -80,3 +103,13 @@ ESPRIT utilizes the rotational invariance property of subarrays to estimate the 
 - Sensitive to array calibration errors.
 - Requires accurate estimation of the number of sources for optimal performance.
 - Performance degrades near endfire angles (0° or 180°).
+
+= Positioning Algorithm
+
+== Triangulation (Angle of Arrival-Based Positioning) 
+
+Triangulation determines position using angles from multiple anchors rather than just distances. By deploying several such anchors, the system can triangulate the tag's position at the intersection of the directional lines (or bearing rays) from each anchor. In essence, if two or more locators know “the tag is at X degrees relative to me,” the tag can be found where those angle lines cross on the floor plan. The https://www.bluetooth.com/wp-content/uploads/2019/05/BTAsia/1145-NORDIC-Bluetooth-Asia-2019Bluetooth-5.1-Direction-Finding-Theory-and-Practice-v0.pdf#page=13[Bluetooth SIG highlights] that using multiple AoA-enabled anchors (a “constellation” of them) allows precise triangulation of a device's location.
+
+Commercial solutions like Quuppa and others use AoA triangulation - anchors compute the angle to the tag and a central engine fuses this multi-anchor angle data to output sub-meter position accuracy.
+
+Anchors measure the angle of the tag whereas the location engine computes the intersection of these angles to determine the tag's position.
