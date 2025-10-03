@@ -22,7 +22,6 @@ By computing the output power, the DAS beamformer generates a spatial spectrum, 
 
 - Limited resolution.
 - Poor performance in presence of strong interferers
-- Susceptible to interference.
 - Struggles to resolve closely spaced sources.
 
 === Capon Beamforming (MVDR)
@@ -37,8 +36,8 @@ The Capon beamforming method, also known as Minimum Variance Distortionless Resp
 
 *Limitations:*
 
-- Computationally intensive.
 - Requires matrix inversion.
+- Computationally intensive.
 - Sensitive to model mismatches.
 
 === Linear Prediction (LP) Method
@@ -95,7 +94,6 @@ ESPRIT extracts the eigenvalues → converts them into phase shifts → then int
 - No need for spectral search, making it computationally more efficient.
 - Performs well with closely spaced sources.
 - Less sensitive to noise than classical methods.
-- Effective when the array geometry meets the shift invariance condition.
 
 *Limitations:*
 
@@ -110,6 +108,6 @@ ESPRIT extracts the eigenvalues → converts them into phase shifts → then int
 
 Triangulation determines position using angles from multiple anchors rather than just distances. By deploying several such anchors, the system can triangulate the tag's position at the intersection of the directional lines (or bearing rays) from each anchor. In essence, if two or more locators know “the tag is at X degrees relative to me,” the tag can be found where those angle lines cross on the floor plan. The https://www.bluetooth.com/wp-content/uploads/2019/05/BTAsia/1145-NORDIC-Bluetooth-Asia-2019Bluetooth-5.1-Direction-Finding-Theory-and-Practice-v0.pdf#page=13[Bluetooth SIG highlights] that using multiple AoA-enabled anchors (a “constellation” of them) allows precise triangulation of a device's location.
 
-Commercial solutions like Quuppa and others use AoA triangulation - anchors compute the angle to the tag and a central engine fuses this multi-anchor angle data to output sub-meter position accuracy.
+Commercial solutions like Quuppa and others use AoA triangulation - anchors compute the angle of the tag and a central engine fuses this multi-anchor angle data to output sub-meter position accuracy.
 
 Anchors measure the angle of the tag whereas the location engine computes the intersection of these angles to determine the tag's position.
